@@ -26,7 +26,11 @@
 
 #define RAMPARTS 10
 #define ROUGH_TERRAIN 11
-#define ENCODER_TO_SPEED .87/10e6
+#define K_P 1.0
+#define K_I 0.0
+#define K_D 0.250
+
+
 
 #include "WPILib.h"
 
