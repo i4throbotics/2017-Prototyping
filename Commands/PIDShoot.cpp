@@ -11,32 +11,24 @@ PIDShoot::PIDShoot() {
 
 // Called just before this Command runs the first time
 void PIDShoot::Initialize() {
-	speedGoal = SmartDashboard::GetNumber("shooter speed", 0);
-	speed = speedGoal;
+	speed = SmartDashboard::GetNumber("shooter speed", 0);
+	speedGoal = speed;
 	Robot::shooter->setSpeed(speed);
-	Robot::shooter->resetEncoder();
-	time.Reset();
-	time.Start();
 
 }
 // Called repeatedly when this Command is scheduled to run
 void PIDShoot::Execute() {
-	SmartDashboard::PutNumber("Actual encoder value", Robot::shooter->getEncoder());
-	if (time.HasPeriodPassed(.01)) {
-		SmartDashboard::PutNumber("encoder speed",
-				(Robot::shooter->getEncoder() * (ENCODER_TO_SPEED) / .01));
-		double error = speedGoal
-				- (Robot::shooter->getEncoder() * (ENCODER_TO_SPEED) / .01);
-		Robot::shooter->resetEncoder();
-		//time.Reset();
+	SmartDashboard::PutNumber("voltage", Robot::shooter->getVolt());
+	SmartDashboard::PutNumber("actual speed", Robot::shooter->getVolt()/12);
+		double error = (speedGoal - (Robot::shooter->getVolt() / 12));//normalize volts to fractional speed
 		errorDifference = error - errorLast;
+		errorLast = error;
 		errorSum += error;
-		double acceleration = (SmartDashboard::GetNumber("kP", 1) * error)
-				+ (SmartDashboard::GetNumber("kI", 0) * errorSum)
-				+ (SmartDashboard::GetNumber("kD", 0.1) * errorDifference);
+		double acceleration = (K_P * error)
+				+ (K_I * errorSum)
+				+ (K_D * errorDifference);
 		speed += acceleration;
 		Robot::shooter->setSpeed(speed);
-	}
 }
 
 // Make this return true when this Command no longer needs to run execute()

@@ -40,7 +40,7 @@ OI::OI() {
     rightButton.reset(new JoystickButton(xboxController.get(), 6));
     backButton.reset(new JoystickButton(xboxController.get(), 7));
 
-    aButton->WhileHeld(new SlopeCalculation());
+    aButton->WhileHeld(new PIDShoot());
     yButton->WhileHeld(new IntakeLift(true));
     bButton->WhileHeld(new IntakeWheels(true));
     xButton->WhileHeld(new IntakeWheels(false));

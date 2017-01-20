@@ -43,7 +43,6 @@ private:
 	double errorSum;
 	double speedGoal;
 	double speed;
-	Timer time;
 
 };
 
